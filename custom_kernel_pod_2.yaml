@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod2
+  annotations:
+    io.katacontainers.config.hypervisor.kernel: "/home/core/images/vmlinuz-5.4.247-105"
+spec:
+  runtimeClassName: kata-qemu
+  containers:
+  - name: c1
+    image: ubuntu
+    command:
+      - bash

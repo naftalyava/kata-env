@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod6
+  annotations:
+    io.katacontainers.config.hypervisor.kernel: "/home/core/images/vmlinuz-6.3.8-108"
+spec:
+  runtimeClassName: kata-qemu
+  containers:
+  - name: c1
+    image: navadiaev/ubuntu-systemd:latest
+    imagePullPolicy: Always
+    command:
+      - /usr/lib/systemd/systemd
+    securityContext:
+      privileged: true
+      capabilities:
+            add: ["SYS_ADMIN"]
+    volumeMounts:
+    - name: cgroup
+      mountPath: /sys/fs/cgroup
+      readOnly: true
+    - name: tmp
+      mountPath: /tmp
+      subPath: tmp
+    - name: tmp
+      mountPath: /run
+      subPath: run
+    - name: tmp
+      mountPath: /run/lock
+      subPath: run-lock
+  volumes:
+  - name: cgroup
+    hostPath:
+      path: /sys/fs/cgroup
+      type: Directory
+  - name: tmp
+    emptyDir:
+     medium: Memory
+     sizeLimit: 128Mi

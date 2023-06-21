@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod7
+  annotations:
+    io.katacontainers.config.hypervisor.kernel: "/home/core/images/vmlinuz-6.3.8-108"
+spec:
+  runtimeClassName: kata-qemu
+  containers:
+  - name: c1
+    image: jrei/systemd-ubuntu
+    imagePullPolicy: Always
+    command:
+      - bash
+    securityContext:
+      privileged: true
+    volumeMounts:
+    - name: cgroup
+      mountPath: /sys/fs/cgroup
+    - name: run
+      mountPath: /run
+    - name: tmp
+      mountPath: /tmp
+  volumes:
+  - name: cgroup
+    hostPath:
+      path: /sys/fs/cgroup
+  - name: run
+    hostPath:
+      path: /run
+  - name: tmp
+    emptyDir: {}
